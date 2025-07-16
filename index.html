@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Accidentes SST</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-content"> <img src="C:\Users\ncacpraitmil\Desktop\SST\Sr Pez.jpg" alt="Logo de la Empresa" class="header-logo">
+            <h1>Dashboard de Análisis de Accidentes</h1>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#vision-general">Visión General</a></li>
+            <li><a href="#gestion-datos">Gestión de Datos</a></li>
+            <li><a href="#graficos">Gráficos</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="vision-general">
+            <h2>Visión General y Estadísticas Clave 📊</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total de Accidentes</h3>
+                    <p id="totalAccidentes">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Accidentes con Mortalidad</h3>
+                    <p id="mortalidadAccidentes">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Accidentes por Género (Mujer)</h3>
+                    <p id="generoFemenino">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Accidentes por Género (Hombre)</h3>
+                    <p id="generoMasculino">0</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="gestion-datos">
+            <h2>Gestión de Datos de Accidentes 📝</h2>
+            <button id="abrirModalCrear" class="btn-primary">Registrar Nuevo Accidente</button>
+
+            <div id="modalAccidente" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h3>Registro/Edición de Accidente</h3>
+                    <form id="formAccidente">
+                        <input type="hidden" id="accidenteId">
+                        
+                        <label for="fecha">Fecha:</label>
+                        <input type="date" id="fecha" required>
+
+                        <label for="nombrePersona">Nombre de la Persona:</label>
+                        <input type="text" id="nombrePersona" placeholder="Nombre completo" required>
+
+                        <label for="tipo">Tipo de Accidente:</label>
+                        <select id="tipo" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="Colisión">Colisión</option>
+                            <option value="Atropello">Atropello</option>
+                            <option value="Caída">Caída</option>
+                            <option value="Quemadura">Quemadura</option>
+                            <option value="Corte">Corte</option>
+                            <option value="Electrocución">Electrocución</option>
+                            <option value="Vuelco">Vuelco</option>
+                        </select>
+
+                        <label for="mortalidad">Mortalidad:</label>
+                        <select id="mortalidad">
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+
+                        <label for="genero">Género:</label>
+                        <select id="genero">
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="otro">Otro</option>
+                        </select>
+
+                        <label for="area">Área:</label>
+                        <select id="area" required>
+                            <option value="">Seleccione un área</option>
+                            <option value="Sistemas">Sistemas</option>
+                            <option value="Calidad">Calidad</option>
+                            <option value="Planta">Planta</option>
+                            <option value="Facturación">Facturación</option>
+                            <option value="Contabilidad">Contabilidad</option>
+                            <option value="Gerencia">Gerencia</option>
+                            <option value="Administración">Administración</option>
+                            <option value="Ventas">Ventas</option>
+                        </select>
+
+                        <label for="parteCuerpo">Parte del Cuerpo Afectada:</label>
+                        <input type="text" id="parteCuerpo" placeholder="Ej: Mano derecha, Cabeza" required>
+
+                        <label for="lugarAccidente">Dónde Ocurrió el Accidente:</label>
+                        <input type="text" id="lugarAccidente" placeholder="Ej: Almacén, Oficina 301" required>
+
+                        <label for="objetoLesion">Con Qué se Lesionó:</label>
+                        <input type="text" id="objetoLesion" placeholder="Ej: Máquina X, Escalera" required>
+
+                        <label for="descripcion">Descripción del Accidente:</label>
+                        <textarea id="descripcion" placeholder="Detalles del accidente..." rows="4" required></textarea>
+
+                        <button type="submit" class="btn-success">💾 Guardar Accidente</button>
+                    </form>
+                </div>
+            </div>
+
+            <h3>Listado de Accidentes</h3>
+            <div class="filter-controls">
+                <label for="filterInput">Filtrar tabla:</label>
+                <input type="text" id="filterInput" placeholder="Escribe para filtrar...">
+                <button id="exportExcelBtn" class="btn-secondary">⬇️ Exportar a Excel</button>
+                <button id="exportPdfBtn" class="btn-secondary">⬇️ Exportar a PDF</button>
+            </div>
+
+            <table id="tablaAccidentes">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Persona</th>
+                        <th>Tipo</th>
+                        <th>Mortalidad</th>
+                        <th>Género</th>
+                        <th>Área</th>
+                        <th>Parte del Cuerpo</th>
+                        <th>Lugar</th>
+                        <th>Objeto Lesión</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="graficos">
+            <h2>Análisis Gráfico de Accidentes 📈</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Mortalidad por Accidente</h3>
+                    <canvas id="chartMortalidad"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Accidentes por Género</h3>
+                    <canvas id="chartGenero"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Accidentes por Área</h3>
+                    <canvas id="chartArea"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Accidentes por Tipo</h3>
+                    <canvas id="chartTipo"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Accidentes por Mes/Año</h3>
+                    <canvas id="chartMesAnio"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Dashboard de Accidentes</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>

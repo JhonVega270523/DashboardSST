@@ -1,0 +1,441 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #2c3e50; /* Azul oscuro */
+    color: #fff;
+    padding: 1.5rem 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+    justify-content: space-between;
+}
+
+.header-logo {
+    height: 80px;
+    margin-right: 50px;
+}
+
+header h1 {
+    margin: 0 auto;
+    font-size: 2.2em;
+    flex-grow: 0;
+    text-align: center;
+}
+
+nav {
+    background-color: #34495e; /* Azul grisáceo */
+    color: #fff;
+    padding: 0.8rem 0;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #ecf0f1; /* Gris claro al pasar el ratón */
+}
+
+main {
+    padding: 30px;
+    max-width: 1300px;
+    margin: 30px auto;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+section {
+    margin-bottom: 50px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    color: #2980b9; /* Azul más claro */
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 12px;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background-color: #ecf0f1; /* Gris muy claro */
+    padding: 25px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h3 {
+    margin-top: 0;
+    color: #2980b9;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    font-size: 2.8em;
+    font-weight: bold;
+    color: #34495e;
+    margin: 0;
+}
+
+/* Color para el botón principal (Registrar Nuevo Accidente) */
+.btn-primary {
+    background-color: #3498db; /* Azul vibrante */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background-color: #27ae60; /* Verde esmeralda */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #229a58;
+}
+
+/* Cambios de color para botones de exportar */
+#exportExcelBtn {
+    background-color: #2ecc71; /* Verde para Excel */
+    color: white;
+}
+#exportExcelBtn:hover {
+    background-color: #27ae60;
+}
+
+#exportPdfBtn {
+    background-color: #e74c3c; /* Rojo para PDF */
+    color: white;
+}
+#exportPdfBtn:hover {
+    background-color: #c0392b;
+}
+
+/* Estilo general para botones secundarios (usado como base para exportar) */
+.btn-secondary { /* Mantén este para la base, luego sobreescribe con IDs */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* Estilos para el Modal (CRUD) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 20px auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+}
+
+form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+form input[type="date"],
+form input[type="text"],
+form select,
+form textarea { 
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+
+form button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+table thead {
+    background-color: #eaf2f8;
+}
+
+table th, table td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+table th {
+    font-weight: bold;
+    color: #34495e;
+    font-size: 0.95em;
+    text-transform: uppercase;
+}
+
+table tbody tr:nth-child(even){
+    background-color: #f9fbfd;
+}
+
+table tbody tr:hover {
+    background-color: #e9f5ff;
+    cursor: pointer;
+}
+
+.action-buttons button {
+    margin-right: 8px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Colores para Editar y Eliminar (ahora ambos en azul) */
+.edit-btn, .delete-btn {
+    background-color: #3498db; /* Azul como el de registrar */
+    color: white;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+    background-color: #2980b9; /* Azul más oscuro al pasar el ratón */
+    transform: translateY(-1px);
+}
+
+
+/* --- Reglas para los gráficos --- */
+.charts-grid {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 20px; 
+}
+
+.chart-container {
+    width: 100%; 
+    max-width: 400px; 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 15px; 
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+}
+
+/* Para pantallas más grandes, tres columnas */
+@media (min-width: 992px) { 
+    .chart-container {
+        flex: 0 1 calc(33.333% - 20px); 
+        max-width: none; 
+    }
+    .full-width-chart {
+        flex: 1 1 100%; 
+    }
+}
+
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem 0;
+    background-color: #2c3e50;
+    color: #fff;
+    margin-top: 50px;
+    font-size: 0.9em;
+}
+
+/* Nuevo estilo para el contenedor del filtro */
+.filter-controls {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-controls label {
+    font-weight: bold;
+    color: #555;
+}
+
+.filter-controls input[type="text"] {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+}
+
+/* --- Estilos para el botón scroll-to-top --- */
+#scrollTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 50%;
+    font-size: 24px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+#scrollTopBtn:hover {
+    background-color: #2980b9;
+    transform: translateY(-3px);
+}
+
+#scrollTopBtn.show {
+    display: block;
+}
