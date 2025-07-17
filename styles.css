@@ -1,10 +1,20 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Reinicio básico para asegurar consistencia del layout */
+*, *::before, *::after {
+    box-sizing: border-box; /* CLAVE para layout responsivo: padding y border incluidos en el width/height */
+}
+
+html, body {
+    height: 100%; /* Asegura que el body ocupe al menos el 100% de la altura de la viewport */
     margin: 0;
     padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f0f2f5;
     color: #333;
     line-height: 1.6;
+    overflow-x: hidden; /* Evita barras de scroll horizontales indeseadas a nivel del body */
 }
 
 header {
@@ -77,6 +87,7 @@ nav ul li a:hover {
 main {
     padding: 20px; /* Reducir padding en general */
     max-width: 1300px;
+    width: calc(100% - 40px); /* Asegura que el main tenga un ancho flexible y se adapte */
     margin: 20px auto; /* Reducir margen en general */
     background-color: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -508,6 +519,7 @@ footer {
     main {
         padding: 15px; /* Más padding en el main */
         margin: 15px auto;
+        width: calc(100% - 30px); /* Ajuste para el padding reducido */
     }
 
     section {
