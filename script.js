@@ -242,15 +242,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Preparar encabezados (excluir "Acciones")
         const headers = Array.from(table.querySelectorAll('thead th'))
-                              .filter(th => th.textContent.trim() !== 'Acciones')
-                              .map(th => th.textContent.trim());
+                                     .filter(th => th.textContent.trim() !== 'Acciones')
+                                     .map(th => th.textContent.trim());
 
         // Preparar datos (excluir la columna "Acciones")
         const data = [];
         table.querySelectorAll('tbody tr').forEach(row => {
             const rowData = Array.from(row.querySelectorAll('td'))
-                                 .filter((td, index, arr) => index < arr.length - 1) // Excluir la última columna
-                                 .map(td => td.textContent.trim());
+                                     .filter((td, index, arr) => index < arr.length - 1) // Excluir la última columna
+                                     .map(td => td.textContent.trim());
             data.push(rowData);
         });
 

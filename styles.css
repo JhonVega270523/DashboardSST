@@ -22,18 +22,21 @@ header {
     margin: 0 auto;
     padding: 0 20px;
     justify-content: space-between;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
 }
 
 .header-logo {
     height: 80px;
-    margin-right: 50px;
+    margin-right: -75px;
+    flex-shrink: 0; /* Evita que el logo se encoja */
 }
 
 header h1 {
     margin: 0 auto;
     font-size: 2.2em;
-    flex-grow: 0;
+    flex-grow: 1; /* Permite que el título ocupe espacio disponible */
     text-align: center;
+    padding-left: 20px; /* Ajuste para el logo */
 }
 
 nav {
@@ -48,11 +51,14 @@ nav ul {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex; /* Utiliza flexbox para la navegación */
+    justify-content: center; /* Centra los elementos de navegación */
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
 }
 
 nav ul li {
-    display: inline;
-    margin: 0 20px;
+    margin: 0 15px; /* Reducir margen para pantallas pequeñas */
+    padding: 5px 0; /* Añadir padding para mejor clic en móviles */
 }
 
 nav ul li a {
@@ -61,6 +67,7 @@ nav ul li a {
     font-weight: bold;
     font-size: 1.1em;
     transition: color 0.3s ease;
+    white-space: nowrap; /* Evita que los enlaces se rompan en varias líneas */
 }
 
 nav ul li a:hover {
@@ -68,17 +75,17 @@ nav ul li a:hover {
 }
 
 main {
-    padding: 30px;
+    padding: 20px; /* Reducir padding en general */
     max-width: 1300px;
-    margin: 30px auto;
+    margin: 20px auto; /* Reducir margen en general */
     background-color: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
 section {
-    margin-bottom: 50px;
-    padding: 20px;
+    margin-bottom: 30px; /* Reducir margen inferior */
+    padding: 15px; /* Reducir padding de secciones */
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -87,24 +94,25 @@ section {
 h2 {
     color: #2980b9; /* Azul más claro */
     border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 12px;
-    margin-bottom: 25px;
-    font-size: 1.8em;
+    padding-bottom: 10px; /* Reducir padding */
+    margin-bottom: 20px; /* Reducir margen */
+    font-size: 1.6em; /* Ajustar tamaño de fuente */
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap; /* Permite que el título y el ícono se envuelvan */
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Ajustar minmax para móviles */
+    gap: 20px; /* Reducir gap */
+    margin-bottom: 30px; /* Reducir margen */
 }
 
 .stat-card {
     background-color: #ecf0f1; /* Gris muy claro */
-    padding: 25px;
+    padding: 20px; /* Reducir padding */
     border-radius: 8px;
     text-align: center;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
@@ -118,12 +126,12 @@ h2 {
 .stat-card h3 {
     margin-top: 0;
     color: #2980b9;
-    font-size: 1.2em;
-    margin-bottom: 10px;
+    font-size: 1.1em; /* Ajustar tamaño de fuente */
+    margin-bottom: 8px;
 }
 
 .stat-card p {
-    font-size: 2.8em;
+    font-size: 2.5em; /* Ajustar tamaño de fuente */
     font-weight: bold;
     color: #34495e;
     margin: 0;
@@ -133,16 +141,17 @@ h2 {
 .btn-primary {
     background-color: #3498db; /* Azul vibrante */
     color: white;
-    padding: 12px 25px;
+    padding: 10px 20px; /* Ajustar padding */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1.1em;
+    font-size: 1em; /* Ajustar tamaño de fuente */
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 20px;
+    width: fit-content; /* Se ajusta al contenido para no ocupar todo el ancho en desktop */
 }
 
 .btn-primary:hover {
@@ -159,6 +168,8 @@ h2 {
     cursor: pointer;
     font-size: 1em;
     transition: background-color 0.3s ease;
+    width: 100%; /* Ocupa todo el ancho en el formulario */
+    box-sizing: border-box; /* Incluye padding y border en el ancho */
 }
 
 .btn-success:hover {
@@ -183,16 +194,17 @@ h2 {
 }
 
 /* Estilo general para botones secundarios (usado como base para exportar) */
-.btn-secondary { /* Mantén este para la base, luego sobreescribe con IDs */
-    padding: 10px 20px;
+.btn-secondary {
+    padding: 10px 15px; /* Ajustar padding */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.9em; /* Ajustar tamaño de fuente */
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap; /* Evita que el texto del botón se rompa */
 }
 
 
@@ -209,20 +221,22 @@ h2 {
     background-color: rgba(0,0,0,0.6);
     justify-content: center;
     align-items: center;
+    padding: 10px; /* Añadir padding para evitar que el modal toque los bordes */
+    box-sizing: border-box;
 }
 
 .modal-content {
     background-color: #fefefe;
-    padding: 30px;
+    padding: 20px; /* Reducir padding */
     border-radius: 12px;
-    width: 90%;
+    width: 95%; /* Usar un porcentaje más alto para móviles */
     max-width: 600px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     animation: fadeIn 0.3s ease-out;
-    max-height: 90vh;
+    max-height: 95vh; /* Ajustar altura máxima para que quepa en pantallas pequeñas */
     overflow-y: auto;
-    margin: 20px auto;
+    margin: 10px auto; /* Reducir margen */
 }
 
 @keyframes fadeIn {
@@ -233,11 +247,11 @@ h2 {
 .close-button {
     color: #aaa;
     float: right;
-    font-size: 32px;
+    font-size: 30px; /* Ajustar tamaño */
     font-weight: bold;
     position: absolute;
-    top: 15px;
-    right: 20px;
+    top: 10px; /* Ajustar posición */
+    right: 15px; /* Ajustar posición */
     cursor: pointer;
     transition: color 0.3s ease;
 }
@@ -249,46 +263,53 @@ h2 {
 
 form label {
     display: block;
-    margin-top: 15px;
-    margin-bottom: 8px;
+    margin-top: 10px; /* Reducir margen */
+    margin-bottom: 5px; /* Reducir margen */
     font-weight: bold;
     color: #555;
+    font-size: 0.95em;
 }
 
 form input[type="date"],
 form input[type="text"],
 form select,
 form textarea { 
-    width: calc(100% - 24px);
-    padding: 12px;
-    margin-bottom: 18px;
+    width: calc(100% - 20px); /* Ajustar width considerando padding */
+    padding: 10px; /* Reducir padding */
+    margin-bottom: 15px; /* Reducir margen */
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 1em;
+    font-size: 0.95em; /* Ajustar tamaño de fuente */
     box-sizing: border-box;
 }
 
 form textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 70px; /* Ajustar altura mínima */
 }
 
 
 form button[type="submit"] {
     width: 100%;
-    padding: 15px;
-    font-size: 1.1em;
+    padding: 12px; /* Reducir padding */
+    font-size: 1em;
     margin-top: 10px;
 }
 
+/* Nuevo contenedor para tablas que permite desplazamiento horizontal */
+.table-responsive {
+    overflow-x: auto; /* Permite el scroll horizontal si el contenido es demasiado ancho */
+    -webkit-overflow-scrolling: touch; /* Mejora el rendimiento del scroll en dispositivos iOS */
+    margin-top: 25px; /* Mantiene el espacio superior de la tabla */
+    border-radius: 8px; /* Aplica el borde al contenedor del scroll */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Sombra en el contenedor */
+}
+
 table {
-    width: 100%;
+    width: 100%; /* La tabla ocupa el 100% del ancho de su contenedor */
     border-collapse: collapse;
-    margin-top: 25px;
     background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    min-width: 900px; /* CLAVE: Establece un ancho mínimo para la tabla. Si la pantalla es más pequeña que esto, aparecerá el scroll horizontal. */
 }
 
 table thead {
@@ -300,6 +321,7 @@ table th, table td {
     padding: 12px 15px;
     text-align: left;
     vertical-align: middle;
+    white-space: nowrap; /* Evita que el texto dentro de las celdas se rompa en varias líneas, forzando el scroll. */
 }
 
 table th {
@@ -319,12 +341,12 @@ table tbody tr:hover {
 }
 
 .action-buttons button {
-    margin-right: 8px;
-    padding: 8px 15px;
+    margin-right: 8px; /* Reducir margen */
+    padding: 8px 15px; /* Reducir padding */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 0.9em; /* Ajustar tamaño de fuente */
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -345,7 +367,7 @@ table tbody tr:hover {
     display: flex;
     flex-wrap: wrap; 
     justify-content: center; 
-    gap: 20px; 
+    gap: 15px; /* Reducir gap */
 }
 
 .chart-container {
@@ -374,6 +396,18 @@ table tbody tr:hover {
     }
 }
 
+/* Para pantallas medianas (tablets), dos columnas */
+@media (min-width: 768px) and (max-width: 991px) {
+    .chart-container {
+        flex: 0 1 calc(50% - 15px); /* Dos columnas con un pequeño margen */
+        max-width: none;
+    }
+    header h1 {
+        font-size: 2em; /* Ajustar un poco el tamaño del título */
+    }
+}
+
+
 canvas {
     max-width: 100%;
     height: auto;
@@ -384,7 +418,7 @@ footer {
     padding: 1.5rem 0;
     background-color: #2c3e50;
     color: #fff;
-    margin-top: 50px;
+    margin-top: 30px; /* Reducir margen superior */
     font-size: 0.9em;
 }
 
@@ -394,12 +428,13 @@ footer {
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan */
 }
 
 .filter-controls label {
     font-weight: bold;
     color: #555;
+    flex-shrink: 0; /* Evita que la etiqueta se encoja */
 }
 
 .filter-controls input[type="text"] {
@@ -407,26 +442,33 @@ footer {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1em;
-    width: 100%;
-    max-width: 300px;
+    width: 100%; /* Ocupa el 100% del ancho disponible para que no se colapse */
+    max-width: 300px; /* Pero con un máximo para pantallas grandes */
     box-sizing: border-box;
+    flex-grow: 1; /* Permite que el input crezca */
 }
+
+.filter-controls .btn-secondary {
+    flex-shrink: 0; /* Evita que los botones se encojan en pantallas pequeñas */
+    margin-top: 10px; /* Espacio si se envuelven */
+}
+
 
 /* --- Estilos para el botón scroll-to-top --- */
 #scrollTopBtn {
     display: none;
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 20px; /* Ajustar posición */
+    right: 20px; /* Ajustar posición */
     z-index: 99;
     border: none;
     outline: none;
     background-color: #3498db;
     color: white;
     cursor: pointer;
-    padding: 15px;
+    padding: 12px; /* Reducir padding */
     border-radius: 50%;
-    font-size: 24px;
+    font-size: 20px; /* Reducir tamaño de fuente */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
@@ -438,4 +480,93 @@ footer {
 
 #scrollTopBtn.show {
     display: block;
+}
+
+/* Media Query para pantallas muy pequeñas (smartphones) */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.8em; /* Tamaño de fuente más pequeño para títulos */
+        padding-left: 0;
+        text-align: center;
+        width: 100%; /* Ocupa todo el ancho */
+        margin-top: 10px; /* Separación del logo */
+    }
+
+    .header-logo {
+        height: 60px; /* Logo más pequeño */
+        margin-right: 0;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    nav ul li {
+        margin: 0 10px; /* Márgenes aún más pequeños en la navegación */
+        font-size: 0.9em;
+    }
+
+    main {
+        padding: 15px; /* Más padding en el main */
+        margin: 15px auto;
+    }
+
+    section {
+        padding: 10px; /* Más padding en las secciones */
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        font-size: 1.4em; /* Títulos de sección más pequeños */
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr; /* Una columna para las tarjetas de estadísticas */
+        gap: 15px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-card p {
+        font-size: 2em; /* Fuente más pequeña para números grandes */
+    }
+
+    .btn-primary, .btn-secondary {
+        width: 100%; /* Los botones ocupan todo el ancho */
+        text-align: center;
+        justify-content: center; /* Centrar contenido de botón */
+        margin-bottom: 10px;
+    }
+
+    .filter-controls {
+        flex-direction: column; /* Apilar controles de filtro */
+        align-items: stretch; /* Estirar elementos para ocupar el ancho */
+    }
+
+    .filter-controls input[type="text"] {
+        max-width: 100%; /* Input de filtro al 100% */
+    }
+
+    table th, table td {
+        font-size: 0.8em; /* Fuente más pequeña en la tabla */
+        padding: 8px 10px;
+    }
+
+    .action-buttons button {
+        padding: 5px 10px;
+        font-size: 0.75em;
+    }
+
+    .chart-container {
+        padding: 10px; /* Reducir padding de gráficos */
+    }
+
+    /* Asegurar que la tabla responsive funcione también en este media query */
+    .table-responsive {
+        margin-left: -15px; /* Compensar padding del main para que la tabla ocupe todo el ancho */
+        margin-right: -15px;
+        width: calc(100% + 30px); /* Ocupar todo el ancho disponible */
+        border-radius: 0; /* Quitar bordes redondeados en los extremos para pantallas pequeñas */
+    }
 }
