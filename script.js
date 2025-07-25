@@ -7,9 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.querySelector('.close-button');
     const formAccidente = document.getElementById('formAccidente');
     const tablaAccidentesBody = document.querySelector('#tablaAccidentes tbody');
-    const filterInput = document.getElementById('filterInput'); // Nuevo: referencia al input de filtro
-    const exportExcelBtn = document.getElementById('exportExcelBtn'); // Nuevo: referencia al botón de exportar
-    const exportPdfBtn = document.getElementById('exportPdfBtn'); // Nuevo: Referencia al botón PDF!
+    const filterInput = document.getElementById('filterInput'); 
+    const exportExcelBtn = document.getElementById('exportExcelBtn');
+    const exportPdfBtn = document.getElementById('exportPdfBtn'); 
+
+    // Elementos para la importación
+    const importExcelInput = document.getElementById('importExcelInput');
+    const importExcelBtn = document.getElementById('importExcelBtn');
 
     // --- Elementos para el botón de scroll-to-top ---
     const scrollTopBtn = document.createElement('button');
@@ -25,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Usaremos localStorage para simular persistencia en el navegador
     // Se inicia con los datos guardados o un array vacío si no hay nada
     let accidentes = JSON.parse(localStorage.getItem('accidentesData')) || []; 
+    // Variable para mantener el último ID generado para asegurar unicidad
+    let lastId = accidentes.length > 0 ? Math.max(...accidentes.map(acc => acc.id)) : 0;
 
     // --- Funciones para manejar el Modal (Formulario CRUD) ---
     abrirModalBtn.addEventListener('click', () => {
@@ -79,14 +85,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (id) {
             // **UPDATE**: Actualizar accidente existente
-            const index = accidentes.findIndex(acc => acc.id == id);
+            const index = accidentes.findIndex(acc => acc.id == parseInt(id)); // Usar parseInt(id)
             if (index > -1) {
                 accidentes[index] = { id: parseInt(id), ...newAccidenteData };
             }
         } else {
             // **CREATE**: Crear nuevo accidente
-            const newId = accidentes.length > 0 ? Math.max(...accidentes.map(acc => acc.id)) + 1 : 1;
-            accidentes.push({ id: newId, ...newAccidenteData });
+            lastId++; // Incrementar el ID
+            accidentes.push({ id: lastId, ...newAccidenteData });
         }
         
         saveData(); // Guardar cambios en localStorage
@@ -170,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function deleteAccidente(id) {
         if (confirm('¿Estás seguro de que quieres eliminar este accidente? Esta acción no se puede deshacer.')) {
+            // Filtrar y mantener solo los accidentes cuyo ID no coincide con el ID a eliminar
             accidentes = accidentes.filter(acc => acc.id !== id);
             saveData(); // Guardar cambios en localStorage
             updateDashboard(); // Actualizar estadísticas y gráficos
@@ -189,50 +196,141 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable(filterInput.value);
     });
 
-    // --- Funcionalidad de Exportar a Excel ---
-    exportExcelBtn.addEventListener('click', () => {
-        const table = document.getElementById('tablaAccidentes');
-        let csv = [];
-        const BOM = "\uFEFF"; // Byte Order Mark for UTF-8
+    // --- Funcionalidad de Importar desde Excel (.xlsx) ---
+    // Actualizamos el atributo accept del input file para que solo acepte archivos .xlsx
+    importExcelInput.setAttribute('accept', '.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
-        // Obtener los encabezados de la tabla
-        let headers = [];
-        table.querySelectorAll('thead th').forEach((th, index) => {
-            // Excluir la columna "Acciones"
-            if (th.textContent.trim() !== 'Acciones') {
-                headers.push(th.textContent.trim());
-            }
-        });
-        csv.push(headers.join(';')); // Unir encabezados con punto y coma como delimitador
+    importExcelBtn.addEventListener('click', () => {
+        importExcelInput.click(); // Simula el clic en el input de archivo oculto
+    });
 
-        // Obtener las filas visibles (filtradas) de la tabla
-        table.querySelectorAll('tbody tr').forEach(row => {
-            let rowData = [];
-            row.querySelectorAll('td').forEach((cell, index) => {
-                // Excluir la última celda que contiene los botones de acción
-                if (index < row.cells.length - 1) { 
-                    let cellText = cell.textContent.trim();
-                    // Escapar comillas dobles y asegurarse de que el contenido con ';' o ',' esté entre comillas
-                    // Esto es crucial para manejar datos que contengan el delimitador o saltos de línea
-                    if (cellText.includes(';') || cellText.includes('\n') || cellText.includes('"')) {
-                        cellText = '"' + cellText.replace(/"/g, '""') + '"'; // Escapa comillas dobles
-                    }
-                    rowData.push(cellText);
+    importExcelInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // Asume que la primera hoja es la que contiene los datos
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+
+                // Convierte la hoja de trabajo a un array de JSON
+                // header: 1 asegura que la primera fila sea usada como encabezados para las claves
+                const importedData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                if (importedData.length === 0) {
+                    alert('El archivo Excel está vacío o no se pudieron leer los datos.');
+                    return;
                 }
-            });
-            csv.push(rowData.join(';')); // Unir datos de fila con punto y coma
-        });
 
-        const csvString = BOM + csv.join('\n'); // Prepend BOM
-        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `accidentes_filtrados_${new Date().toLocaleDateString('es-ES')}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+                const headers = importedData[0].map(h => String(h).trim()); // Obtener y limpiar encabezados de la primera fila
+                const rawRows = importedData.slice(1); // Obtener solo las filas de datos reales
+
+                const newAccidentsFromImport = rawRows.map(row => {
+                    let accData = {};
+                    headers.forEach((header, index) => {
+                        let value = row[index];
+                        if (value === undefined || value === null) value = ''; // Manejar valores nulos/indefinidos
+
+                        switch (header.toLowerCase()) {
+                            case 'id':
+                                // No usamos el ID del Excel al importar para prevenir duplicados.
+                                // Siempre generamos uno nuevo.
+                                break; 
+                            case 'fecha':
+                                if (typeof value === 'number') {
+                                    accData.fecha = new Date(Math.round((value - 25569) * 86400 * 1000)).toISOString().split('T')[0];
+                                } else {
+                                    accData.fecha = String(value);
+                                }
+                                break;
+                            case 'persona':
+                            case 'nombre de la persona':
+                                accData.nombrePersona = String(value);
+                                break;
+                            case 'tipo':
+                            case 'tipo de accidente':
+                                accData.tipo = String(value);
+                                break;
+                            case 'mortalidad':
+                                accData.mortalidad = String(value).toLowerCase() === 'sí' || String(value).toLowerCase() === 'si' ? 'si' : 'no';
+                                break;
+                            case 'genero':
+                                accData.genero = String(value).toLowerCase();
+                                break;
+                            case 'area':
+                                accData.area = String(value);
+                                break;
+                            case 'parte del cuerpo':
+                                accData.parteCuerpo = String(value);
+                                break;
+                            case 'lugar':
+                            case 'dónde ocurrió el accidente':
+                                accData.lugarAccidente = String(value);
+                                break;
+                            case 'objeto lesión':
+                            case 'con qué se lesionó':
+                                accData.objetoLesion = String(value);
+                                break;
+                            case 'descripción':
+                                accData.descripcion = String(value);
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+
+                    // Generar un nuevo ID único para cada registro importado
+                    lastId++; 
+                    accData.id = lastId;
+                    
+                    return accData;
+                }).filter(acc => acc.fecha && acc.nombrePersona); // Filtrar filas que no tienen datos esenciales
+
+                // **CORRECCIÓN CLAVE: En lugar de reemplazar, añadimos los nuevos accidentes.**
+                accidentes = accidentes.concat(newAccidentsFromImport); 
+
+                saveData();
+                updateDashboard();
+                renderTable(filterInput.value);
+                alert(`Se han importado ${newAccidentsFromImport.length} registros nuevos desde el archivo Excel.`);
+            };
+
+            reader.onerror = function(ex) {
+                console.error("Error al leer el archivo:", ex);
+                alert('Error al leer el archivo. Asegúrate de que sea un archivo Excel (.xlsx) válido.');
+            };
+
+            reader.readAsArrayBuffer(file); // Leer el archivo como un ArrayBuffer
+        }
+    });
+
+    // --- Funcionalidad de Exportar a Excel (.xlsx) ---
+    exportExcelBtn.addEventListener('click', () => {
+        // Preparar los datos para SheetJS
+        const dataToExport = accidentes.map(acc => ({
+            ID: acc.id,
+            Fecha: acc.fecha,
+            Persona: acc.nombrePersona,
+            Tipo: acc.tipo,
+            Mortalidad: acc.mortalidad === 'si' ? 'Sí' : 'No', // Volver a 'Sí'/'No' para el export
+            Genero: acc.genero.charAt(0).toUpperCase() + acc.genero.slice(1),
+            Area: acc.area,
+            'Parte del Cuerpo': acc.parteCuerpo,
+            Lugar: acc.lugarAccidente,
+            'Objeto Lesión': acc.objetoLesion,
+            Descripción: acc.descripcion
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Accidentes");
+
+        // Generar el archivo y descargarlo
+        XLSX.writeFile(workbook, `accidentes_reporte_${new Date().toLocaleDateString('es-ES')}.xlsx`);
     });
 
     // --- Funcionalidad de Exportar a PDF ---
@@ -242,15 +340,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Preparar encabezados (excluir "Acciones")
         const headers = Array.from(table.querySelectorAll('thead th'))
-                                     .filter(th => th.textContent.trim() !== 'Acciones')
-                                     .map(th => th.textContent.trim());
+                                   .filter(th => th.textContent.trim() !== 'Acciones')
+                                   .map(th => th.textContent.trim());
 
         // Preparar datos (excluir la columna "Acciones")
         const data = [];
         table.querySelectorAll('tbody tr').forEach(row => {
             const rowData = Array.from(row.querySelectorAll('td'))
-                                     .filter((td, index, arr) => index < arr.length - 1) // Excluir la última columna
-                                     .map(td => td.textContent.trim());
+                                   .filter((td, index, arr) => index < arr.length - 1) // Excluir la última columna
+                                   .map(td => td.textContent.trim());
             data.push(rowData);
         });
 
@@ -301,11 +399,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('generoFemenino').textContent = accidentes.filter(acc => acc.genero === 'femenino').length;
         document.getElementById('generoMasculino').textContent = accidentes.filter(acc => acc.genero === 'masculino').length;
 
-        // Estas actualizaciones de estadísticas por Tipo y Área en el HTML no existen en el HTML actual,
-        // pero las dejo en el JS por si se agregaran en el futuro o para referencia.
         TIPOS_ACCIDENTE.forEach(tipo => {
             const count = accidentes.filter(acc => acc.tipo === tipo).length;
-            const element = document.getElementById(`tipo${tipo.replace(/\s/g, '')}`); // Remove spaces for ID
+            const element = document.getElementById(`tipo${tipo.replace(/\s/g, '')}`); 
             if (element) {
                 element.textContent = count;
             }
@@ -313,13 +409,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         AREAS.forEach(area => {
             const count = accidentes.filter(acc => acc.area === area).length;
-            const element = document.getElementById(`area${area.replace(/\s/g, '')}`); // Remove spaces for ID
+            const element = document.getElementById(`area${area.replace(/\s/g, '')}`); 
             if (element) {
                 element.textContent = count;
             }
         });
 
-        // Estadísticas: Accidentes por Mes/Año (estas IDs tampoco existen en el HTML proporcionado)
         const today = new Date();
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
@@ -416,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 labels: Object.keys(areaCounts),
                 datasets: [{
                     data: Object.values(areaCounts),
-                    backgroundColor: ['#1abc9c', '#f39c12', '#9b59b6', '#34495e', '#7f8c8d', '#c0392b', '#2980b9', '#8e44ad', '#2c3e50', '#d35400', '#2ecc71'], // Más colores para más áreas
+                    backgroundColor: ['#1abc9c', '#f39c12', '#9b59b6', '#34495e', '#7f8c8d', '#c0392b', '#2980b9', '#8e44ad', '#2c3e50', '#d35400', '#2ecc71'], 
                     hoverOffset: 4
                 }]
             },
@@ -469,7 +564,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Asegúrate de que los meses estén ordenados cronológicamente
         const sortedMonths = Object.keys(monthlyData).sort((a, b) => {
-            // Adaptar para analizar el formato "abreviado año" (ej. "jul. 2024")
             const partsA = a.split(' ');
             const monthNameA = partsA[0].replace('.', ''); 
             const yearA = parseInt(partsA[1]);

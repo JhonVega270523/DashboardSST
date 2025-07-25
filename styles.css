@@ -3,6 +3,10 @@
     box-sizing: border-box; /* CLAVE para layout responsivo: padding y border incluidos en el width/height */
 }
 
+html {
+    scroll-behavior: smooth; /* Habilita el scroll suave para toda la página */
+}
+
 html, body {
     height: 100%; /* Asegura que el body ocupe al menos el 100% de la altura de la viewport */
     margin: 0;
@@ -202,6 +206,14 @@ h2 {
 }
 #exportPdfBtn:hover {
     background-color: #c0392b;
+}
+
+#importExcelBtn {
+    background-color: #6a1b9a; /* Un tono de morado */
+    color: white;
+}
+#importExcelBtn:hover {
+    background-color: #4a148c; /* Morado más oscuro al pasar el ratón */
 }
 
 /* Estilo general para botones secundarios (usado como base para exportar) */
